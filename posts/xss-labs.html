@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XSS-labs 20 关通关总结 // QIANMI</title>
+<meta name="description" content="按防御手法把 XSS-labs 的 20 关串一遍：从零过滤、属性注入，到编码陷阱与黑名单绕过。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23050706'/%3E%3Cpath d='M6 34 L34 6 L26 34 Z' fill='%2300ff41'/%3E%3Cpath d='M6 34 L34 6 L20 34 Z' fill='%23ffffff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/moss.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav__inner">
+    <a class="brand" href="../index.html" aria-label="QIANMI 首页">
+      <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect width="40" height="40" fill="#050706"/>
+        <path d="M7 33 L33 7 L25 33 Z" fill="#00ff41"/>
+        <path d="M7 33 L33 7 L19 33 Z" fill="#fff"/>
+      </svg>
+      <span class="brand__text">Qian<em>mi</em></span>
+    </a>
+    <div class="nav__links">
+      <a class="nav__link" href="../index.html">Index</a>
+      <a class="nav__link" href="../archive.html" aria-current="page">文章</a>
+      <a class="nav__link" href="../projects.html">项目</a>
+      <a class="nav__link" href="../about.html">关于</a>
+      <a class="nav__gh" href="https://github.com/qianmi-qm" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="nav__toggle" type="button" aria-label="打开导航菜单" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<header class="article-head">
+  <svg class="article-head__shards" data-shard-field='{"seed":63,"focal":{"x":0.44,"y":0.52},"flow":-150,"density":1.0,"beams":1,"contrast":0.42,"greenRatio":0.3}' aria-hidden="true"></svg>
+  <div class="article-head__veil"></div>
+  <div class="wrap article-head__inner">
+    <span class="kicker">Web 安全</span>
+    <h1 class="article-head__title">XSS-labs 20 关通关总结</h1>
+    <div class="article-head__meta">
+      <span>2026.08.27</span>
+      <span class="cat">Web 安全</span>
+      <span>18 min read</span>
+    </div>
+  </div>
+</header>
+
+<div class="slant slant--ink-2 slant--rev" aria-hidden="true"></div>
+
+<article class="article-body">
+  <div class="wrap">
+    <div class="prose">
+
+      <p>
+        XSS-labs 是一个本地 PHP 环境的反射型 XSS 专项靶场。
+        它的判定机制很有意思：靶场重写了 <code>window.alert</code>，
+        只要你的 payload 成功触发一次 <code>alert()</code>，就自动跳到下一关。
+      </p>
+      <p>
+        做之前先把 SQL-labs 过了一遍，上手很快——因为很多关卡的思路本质是一样的：
+        <strong>闭合原有语句，插入自己的代码</strong>。区别只在于闭合的是标签、属性，还是 JS 字符串。
+      </p>
+      <p>
+        下面我不按关卡编号讲，而是<strong>按防御手法分组</strong>。
+        因为真正有价值的不是"第几关怎么过"，而是"这种过滤为什么挡不住"。
+      </p>
+
+      <h2>第一组：零过滤与属性注入（L1–L4）</h2>
+      <p>
+        L1 是最裸的：<code>$_GET["name"]</code> 直接 <code>echo</code> 到页面上，没有任何处理。
+      </p>
+      <pre data-lang="payload"><code>&lt;script&gt;alert(1)&lt;/script&gt;</code></pre>
+      <p>
+        L2 把输出点挪进了 <code>&lt;input value="..."&gt;</code> 里。
+        标题部分用了 <code>htmlspecialchars</code>，但拼接 <code>value</code> 属性时忘了过滤。
+        这时候插入标签是没用的，得先<strong>闭合属性</strong>：
+      </p>
+      <pre data-lang="payload"><code>1"&gt;&lt;script&gt;alert('xss')&lt;/script&gt;</code></pre>
+      <p>
+        L3 两处都加了 <code>htmlspecialchars</code>，但它默认是 <code>ENT_COMPAT</code> 模式——
+        <strong>只转义双引号，不转义单引号</strong>。而输出点恰好包在单引号里，于是：
+      </p>
+      <pre data-lang="payload"><code>1' onclick='alert(1)</code></pre>
+      <p>
+        L4 又变回双引号包裹，但这次单双引号都被转义了。解法是绕开引号——
+        用事件属性 + 无引号形式，或者直接闭合标签另起一个：
+      </p>
+      <pre data-lang="payload"><code>1"&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code></pre>
+      <blockquote>
+        这一组要建立的核心直觉是：<strong>先看输出落在什么上下文里</strong>。
+        上下文是 HTML 正文、属性值、还是 JS 字符串，决定了你需要闭合什么。
+      </blockquote>
+
+      <h2>第二组：标签与关键字黑名单（L5–L8）</h2>
+      <p>
+        L5 开始出现过滤了：<code>script</code> 关键字被替换。
+        应对方式有好几种，最直接的是<strong>大小写混淆</strong>：
+      </p>
+      <pre data-lang="payload"><code>&lt;ScRiPt&gt;alert(1)&lt;/ScRiPt&gt;</code></pre>
+      <p>
+        如果大小写也被处理了，就换<strong>非 script 标签</strong>。能被浏览器执行 JS 的标签和属性很多：
+      </p>
+      <pre data-lang="payload"><code>&lt;img src=1 onerror=alert(1)&gt;
+&lt;svg onload=alert(1)&gt;
+&lt;body onpageshow=alert(1)&gt;
+&lt;details open ontoggle=alert(1)&gt;
+&lt;video&gt;&lt;source onerror=alert(1)&gt;</code></pre>
+      <p>
+        L7 把 <code>script</code>、<code>on</code> 这类词都做了替换，但替换是<strong>一次性的</strong>，
+        没有循环处理。于是<strong>双写</strong>就能恢复：
+      </p>
+      <pre data-lang="payload"><code>&lt;scscriptript&gt;alert(1)&lt;/scscriptript&gt;
+&lt;img src=1 oonnerror=alert(1)&gt;</code></pre>
+      <p>
+        L8 引入了 HTML 实体编码。这时候需要看后端解码发生在哪一步——
+        如果先解码再过滤，可以用实体绕过；如果先过滤再解码，就换个思路，
+        利用 <code>javascript:</code> 伪协议或 <code>data:</code> URI 做跳转。
+      </p>
+
+      <h2>第三组：编码与实体陷阱（L9–L12）</h2>
+      <p>
+        这一组的关键是理解<strong>过滤和浏览器解析不在同一个层面</strong>。
+        后端按字符串匹配做黑名单，浏览器按 HTML/JS 语法解析。
+        只要两者对"同一个输入"的理解不一致，就存在绕过空间。
+      </p>
+      <p>
+        L9 检查了输入里是否包含 <code>http://</code>，看起来是在防止外链注入。
+        但它漏了一个基本事实：<strong>URL 里可以不写协议头</strong>。
+      </p>
+      <pre data-lang="payload"><code>javascript:alert(1)
+// 或用实体避开关键字匹配</code></pre>
+      <p>
+        L11 出现了隐藏字段 <code>t_link</code>、<code>t_history</code>，
+        服务端只检查 <code>t_ref</code> 参数。用浏览器开发者工具
+        直接改掉隐藏字段的 <code>value</code>，再提交即可。
+        这关教的是：<strong>永远不要信任客户端提交的任何字段，包括隐藏字段</strong>。
+      </p>
+
+      <h2>第四组：协议与 DOM 型（L13–L16）</h2>
+      <p>
+        L13 起进入 DOM 型 XSS 的地盘。这类漏洞的特点是
+        <strong>服务端完全没有参与</strong>——数据从 <code>location.hash</code>
+        或 <code>innerHTML</code> 直接流向危险汇聚点（sink）。
+      </p>
+      <p>
+        常见的危险 sink 有：
+      </p>
+      <ul>
+        <li><code>innerHTML</code> / <code>outerHTML</code> / <code>document.write</code></li>
+        <li><code>eval</code> / <code>setTimeout(字符串)</code></li>
+        <li><code>location.href</code> / <code>location.assign</code>（伪协议）</li>
+        <li><code>element.setAttribute('onclick', ...)</code></li>
+      </ul>
+      <p>
+        L16 的 <code>img</code> 标签被过滤了，但过滤规则只针对小写的 <code>img</code>。
+        换成 <code>&lt;IMG&gt;</code>，或者干脆换 <code>&lt;svg&gt;</code> 就能过：
+      </p>
+      <pre data-lang="payload"><code>&lt;svg onload=alert(1)&gt;
+&lt;IMG SRC=x ONERROR=alert(1)&gt;</code></pre>
+
+      <h2>第五组：进阶与综合（L17–L20）</h2>
+      <p>
+        最后几关把前面积累的手法组合起来，重点考察两点：
+        <strong>一是搞清楚数据流经的每一步做了什么处理</strong>，
+        <strong>二是善用浏览器开发者工具观察 DOM 变化</strong>。
+      </p>
+      <p>
+        实战中我会按这个顺序排查：
+      </p>
+      <ol>
+        <li>输入一个带特征的字符串（比如 <code>qianmi123</code>），看它在页面哪里回显。</li>
+        <li>确定回显位置所在的上下文（正文 / 属性 / JS / URL）。</li>
+        <li>逐字符试探哪些符号被过滤了：<code>&lt; &gt; " ' ( ) / =</code>。</li>
+        <li>根据可用符号构造最小 payload，再逐步升级。</li>
+      </ol>
+
+      <h2>防御：从靶场回到工程</h2>
+      <p>
+        靶场是为了让你看清"为什么挡不住"。真做工程时，防御的优先级应该是：
+      </p>
+      <table>
+        <thead>
+          <tr><th>措施</th><th>作用</th><th>注意</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>输出编码</td><td>最核心，按上下文选择编码方式</td><td>HTML/属性/JS/URL 四种上下文编码规则不同</td></tr>
+          <tr><td>富文本白名单过滤</td><td>允许部分 HTML 时使用</td><td>必须用成熟库，别自己写正则</td></tr>
+          <tr><td>CSP</td><td>兜底，阻断内联脚本执行</td><td>配置要严，避免 <code>unsafe-inline</code></td></tr>
+          <tr><td>HttpOnly Cookie</td><td>降低 XSS 窃取会话的危害</td><td>只是缓解，不是修复</td></tr>
+        </tbody>
+      </table>
+      <blockquote>
+        一个常见误区：把黑名单当成主要防御手段。
+        黑名单永远在追赶攻击者的新花样，而<strong>白名单 + 上下文编码</strong>
+        是从语法层面堵死，这才是根本解。
+      </blockquote>
+
+      <h2>小结</h2>
+      <p>
+        20 关做下来，最大的收获不是攒了一堆 payload，
+        而是形成了一套<strong>上下文优先</strong>的思考方式：
+        先判断数据落在哪，再决定怎么闭合，最后才考虑怎么绕过过滤。
+      </p>
+      <p>
+        顺序反了，就会变成到处试 payload 的碰运气。
+      </p>
+
+    </div>
+  </div>
+</article>
+
+<section class="article-foot">
+  <div class="wrap article-foot__inner">
+    <a class="btn btn--ghost" href="mysql-index.html"><span>← 上一篇：MySQL 索引失效</span></a>
+    <a class="btn" href="sql-injection.html"><span>下一篇：SQL 注入系统梳理 →</span></a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__bottom" style="padding-top:0;border:0">
+      <span>© <span data-year>2026</span> QIANMI · ALL RIGHTS RESERVED</span>
+      <span>BLACK TERMINAL <em>v5.0</em> / BUILT BY HAND</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/moss.js"></script>
+</body>
+</html>

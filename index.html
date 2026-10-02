@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QIANMI // 个人博客</title>
+<meta name="description" content="QIANMI 的个人博客 —— 记录后端开发、Web 安全与 AI 工程化的学习与实践。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23050706'/%3E%3Cpath d='M6 34 L34 6 L26 34 Z' fill='%2300ff41'/%3E%3Cpath d='M6 34 L34 6 L20 34 Z' fill='%23ffffff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/moss.css">
+</head>
+<body>
+
+<!-- ========== 导航 ========== -->
+<nav class="nav">
+  <div class="wrap nav__inner">
+    <a class="brand" href="index.html" aria-label="QIANMI 首页">
+      <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect width="40" height="40" fill="#050706"/>
+        <path d="M7 33 L33 7 L25 33 Z" fill="#00ff41"/>
+        <path d="M7 33 L33 7 L19 33 Z" fill="#fff"/>
+      </svg>
+      <span class="brand__text">Qian<em>mi</em></span>
+    </a>
+
+    <div class="nav__links">
+      <a class="nav__link" href="index.html" aria-current="page">Index</a>
+      <a class="nav__link" href="archive.html">文章</a>
+      <a class="nav__link" href="projects.html">项目</a>
+      <a class="nav__link" href="about.html">关于</a>
+      <a class="nav__gh" href="https://github.com/qianmi-qm" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        GitHub
+      </a>
+    </div>
+
+    <button class="nav__toggle" type="button" aria-label="打开导航菜单" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ========== Hero ========== -->
+<header class="hero">
+  <svg class="hero__shards" data-shard-field='{"seed":11,"focal":{"x":0.76,"y":0.24},"flow":-155,"density":1.0,"beams":2,"contrast":0.42,"greenRatio":0.32}' aria-hidden="true"></svg>
+  <div class="hero__veil"></div>
+
+  <!-- 角落标注 -->
+  <span class="corner-label corner-label--tl">+ PERSONAL BLOG<br>EST. <em>2026</em></span>
+
+  <!-- 右上 HUD 科技框 -->
+  <div class="hud-box" aria-hidden="true">
+    <span class="tri-arrow"></span><b>QIANMI+</b> // DISORDER<br>
+    REV <b>2026.10</b> · CN UTC+8
+  </div>
+
+  <div class="wrap hero__inner">
+    <span class="hero__badge"><i></i> System online · 站点运行中</span>
+
+    <h1 class="hero__title">
+      <span data-glitch="QIANMI">QIANMI</span><span class="slash">//</span><i class="cursor" aria-hidden="true"></i>
+    </h1>
+
+    <!-- 横贯刻度线条 -->
+    <div class="hero__rule" aria-hidden="true">
+      <span>BLOG VOL./.1</span>
+    </div>
+
+    <p class="hero__cn">
+      这里是<strong>千里（QIANMI）</strong>的自留地。记录后端开发、Web 安全与 AI 工程化的学习轨迹，
+      也存放那些"折腾过、踩过坑、想明白了"的东西。不追热点，只做沉淀。
+    </p>
+
+    <div class="hero__actions">
+      <a class="btn btn--solid" href="archive.html"><span>浏览文章 →</span></a>
+      <a class="btn btn--ghost" href="projects.html"><span>查看项目</span></a>
+    </div>
+  </div>
+
+  <div class="scroll-hint" aria-hidden="true">
+    <i></i>
+    <span>Scroll</span>
+  </div>
+</header>
+
+<!-- ========== 跑马灯 ========== -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker__track">
+    <div class="ticker__group">
+      <span class="ticker__item">Java</span>
+      <span class="ticker__item">Spring Boot</span>
+      <span class="ticker__item">MySQL</span>
+      <span class="ticker__item">Vue 3</span>
+      <span class="ticker__item">React</span>
+      <span class="ticker__item">TypeScript</span>
+      <span class="ticker__item">Web Security</span>
+      <span class="ticker__item">AI Engineering</span>
+      <span class="ticker__item">Linux</span>
+      <span class="ticker__item">Keep Building</span>
+    </div>
+    <div class="ticker__group">
+      <span class="ticker__item">Java</span>
+      <span class="ticker__item">Spring Boot</span>
+      <span class="ticker__item">MySQL</span>
+      <span class="ticker__item">Vue 3</span>
+      <span class="ticker__item">React</span>
+      <span class="ticker__item">TypeScript</span>
+      <span class="ticker__item">Web Security</span>
+      <span class="ticker__item">AI Engineering</span>
+      <span class="ticker__item">Linux</span>
+      <span class="ticker__item">Keep Building</span>
+    </div>
+  </div>
+</div>
+
+<div class="slant slant--neon-2 slant--rev" aria-hidden="true"></div>
+
+<!-- ========== 最新文章 ========== -->
+<section class="sec sec--ink-2">
+  <div class="wrap">
+    <div class="sec__head reveal">
+      <span class="kicker">Latest / 01</span>
+      <h2 class="sec__title">最新文章</h2>
+      <p class="sec__desc">最近写下的东西。技术笔记、靶场复盘、以及偶尔的碎念。</p>
+    </div>
+
+    <div class="post-grid">
+      <a class="post-tile reveal" href="posts/moss-blog-build.html" data-delay="0">
+        <div class="post-tile__top">
+          <span>2026.09.28</span>
+          <span>杂谈</span>
+        </div>
+        <h3 class="post-tile__title">从零搭一个 MOSS 风格的个人博客</h3>
+        <p class="post-tile__excerpt">黑白单色、荧光绿斜线、故障字——这套视觉到底是怎么用纯 CSS 和几行 SVG 生成器做出来的。</p>
+        <div class="post-tile__foot">
+          <span>Read →</span>
+          <span>12 min</span>
+        </div>
+      </a>
+
+      <a class="post-tile reveal" href="posts/xss-labs.html" data-delay="90">
+        <div class="post-tile__top">
+          <span>2026.08.27</span>
+          <span>Web 安全</span>
+        </div>
+        <h3 class="post-tile__title">XSS-labs 20 关通关总结</h3>
+        <p class="post-tile__excerpt">按防御手法把 20 关串一遍：从零过滤、属性注入，到 htmlspecialchars 的编码陷阱与标签黑名单绕过。</p>
+        <div class="post-tile__foot">
+          <span>Read →</span>
+          <span>18 min</span>
+        </div>
+      </a>
+
+      <a class="post-tile reveal" href="posts/mysql-index.html" data-delay="180">
+        <div class="post-tile__top">
+          <span>2026.09.15</span>
+          <span>后端</span>
+        </div>
+        <h3 class="post-tile__title">MySQL 索引失效的常见写法</h3>
+        <p class="post-tile__excerpt">函数包裹列、隐式类型转换、前导模糊、范围查询后的列——把那些"写了索引却还是全表扫描"的场景挨个复现一遍。</p>
+        <div class="post-tile__foot">
+          <span>Read →</span>
+          <span>16 min</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="hero__actions" style="margin-top:2.6rem">
+      <a class="btn" href="archive.html"><span>全部文章 →</span></a>
+    </div>
+  </div>
+</section>
+
+<div class="slant slant--2-ink" aria-hidden="true"></div>
+
+<!-- ========== 项目（黑底对比区） ========== -->
+<section class="sec sec--ink">
+  <div class="wrap">
+    <div class="sec__head reveal">
+      <span class="kicker">Projects / 02</span>
+      <h2 class="sec__title">项目</h2>
+      <p class="sec__desc">折腾过的一些东西，都开源在 GitHub 上，欢迎 star 和提 issue。</p>
+    </div>
+
+    <div class="proj-grid">
+      <article class="proj-card reveal" data-delay="0">
+        <span class="proj-card__id">PRJ-001</span>
+        <h3 class="proj-card__name">qianmi-blog</h3>
+        <p class="proj-card__desc">你现在看到的这个站点。纯静态、零构建，视觉系统由 CSS 变量 + 程序化 SVG 几何生成器组成。</p>
+        <div class="proj-card__stack">
+          <span>HTML</span><span>CSS</span><span>Vanilla JS</span>
+        </div>
+        <div class="proj-card__links">
+          <a href="https://github.com/qianmi-qm" target="_blank" rel="noopener">Source →</a>
+        </div>
+      </article>
+
+      <article class="proj-card reveal" data-delay="90">
+        <span class="proj-card__id">PRJ-002</span>
+        <h3 class="proj-card__name">sec-notes</h3>
+        <p class="proj-card__desc">Web 安全靶场笔记合集：SQL-labs、XSS-labs 的完整通关思路与 payload 速查。</p>
+        <div class="proj-card__stack">
+          <span>Markdown</span><span>Payload</span>
+        </div>
+        <div class="proj-card__links">
+          <a href="https://github.com/qianmi-qm" target="_blank" rel="noopener">Source →</a>
+        </div>
+      </article>
+
+      <article class="proj-card reveal" data-delay="180">
+        <span class="proj-card__id">PRJ-003</span>
+        <h3 class="proj-card__name">spring-ai-playground</h3>
+        <p class="proj-card__desc">Spring Boot 接入大模型的实验场，覆盖对话、向量检索与工具调用的最小可运行示例。</p>
+        <div class="proj-card__stack">
+          <span>Java</span><span>Spring Boot</span><span>Spring AI</span>
+        </div>
+        <div class="proj-card__links">
+          <a href="https://github.com/qianmi-qm" target="_blank" rel="noopener">Source →</a>
+        </div>
+      </article>
+    </div>
+
+    <div class="hero__actions" style="margin-top:2.6rem">
+      <a class="btn btn--ghost" href="projects.html"><span>全部项目 →</span></a>
+    </div>
+  </div>
+</section>
+
+<div class="slant slant--ink-2 slant--rev" aria-hidden="true"></div>
+
+<!-- ========== 关于 ========== -->
+<section class="sec sec--ink-2">
+  <div class="wrap">
+    <div class="sec__head reveal">
+      <span class="kicker">About / 03</span>
+      <h2 class="sec__title">关于我</h2>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>
+          我是 <strong>千里（QIANMI）</strong>，一名从网络安全转向 AI 后端 / 全栈方向的开发者。
+          Java 和 MySQL 是我的主力工具，前端在 Vue 3、React 18 和 TypeScript 上持续补课。
+        </p>
+        <p>
+          我的学习方式比较"工程化"：不太背语法，更喜欢把概念、架构和调试过程吃透。
+          习惯把 AI 工具嵌进日常开发流——生成、审查、解释、模拟面试，人负责判断与决策。
+        </p>
+        <p>
+          这个博客是我的一方自留地。写得慢，但写得真。
+        </p>
+      </div>
+
+      <aside class="about-facts reveal" data-delay="120">
+        <dl style="margin:0">
+          <div class="fact"><dt>ID</dt><dd>qianmi</dd></div>
+          <div class="fact"><dt>方向</dt><dd>AI 后端 / 全栈</dd></div>
+          <div class="fact"><dt>主力语言</dt><dd>Java · TypeScript</dd></div>
+          <div class="fact"><dt>在学</dt><dd>Spring AI · LangChain4j</dd></div>
+          <div class="fact"><dt>关注</dt><dd>Web 安全 · 系统设计</dd></div>
+          <div class="fact"><dt>状态</dt><dd>持续输出中</dd></div>
+        </dl>
+      </aside>
+    </div>
+
+    <div class="contact-list reveal">
+      <dl class="contact-item" style="margin:0">
+        <dt>GitHub</dt>
+        <dd><a href="https://github.com/qianmi-qm" target="_blank" rel="noopener">github.com/qianmi-qm</a></dd>
+      </dl>
+      <dl class="contact-item" style="margin:0">
+        <dt>Blog</dt>
+        <dd><a href="index.html">qianmi-qm.github.io</a></dd>
+      </dl>
+      <dl class="contact-item" style="margin:0">
+        <dt>Email</dt>
+        <dd><a href="mailto:qianmi@example.com">qianmi@example.com</a></dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<div class="slant slant--2-ink" aria-hidden="true"></div>
+
+<!-- ========== 页脚 ========== -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <span class="brand__text">Qian<em>mi</em></span>
+        <p>吵闹的都市里，总需要于一方自留地中，视真我。</p>
+      </div>
+
+      <div class="footer__cols">
+        <div class="footer__col">
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="index.html">首页</a></li>
+            <li><a href="archive.html">文章</a></li>
+            <li><a href="projects.html">项目</a></li>
+            <li><a href="about.html">关于</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Elsewhere</h4>
+          <ul>
+            <li><a href="https://github.com/qianmi-qm" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a href="mailto:qianmi@example.com">Email</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <span>© <span data-year>2026</span> QIANMI · ALL RIGHTS RESERVED</span>
+      <span>BLACK TERMINAL <em>v5.0</em> / BUILT BY HAND</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/moss.js"></script>
+</body>
+</html>

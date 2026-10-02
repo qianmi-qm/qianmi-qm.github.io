@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文章归档 // QIANMI</title>
+<meta name="description" content="QIANMI 博客的全部文章归档，按分类筛选。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23050706'/%3E%3Cpath d='M6 34 L34 6 L26 34 Z' fill='%2300ff41'/%3E%3Cpath d='M6 34 L34 6 L20 34 Z' fill='%23ffffff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/moss.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav__inner">
+    <a class="brand" href="index.html" aria-label="QIANMI 首页">
+      <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect width="40" height="40" fill="#050706"/>
+        <path d="M7 33 L33 7 L25 33 Z" fill="#00ff41"/>
+        <path d="M7 33 L33 7 L19 33 Z" fill="#fff"/>
+      </svg>
+      <span class="brand__text">Qian<em>mi</em></span>
+    </a>
+    <div class="nav__links">
+      <a class="nav__link" href="index.html">Index</a>
+      <a class="nav__link" href="archive.html" aria-current="page">文章</a>
+      <a class="nav__link" href="projects.html">项目</a>
+      <a class="nav__link" href="about.html">关于</a>
+      <a class="nav__gh" href="https://github.com/qianmi-qm" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="nav__toggle" type="button" aria-label="打开导航菜单" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<header class="page-head">
+  <svg class="page-head__shards" data-shard-field='{"seed":31,"focal":{"x":0.78,"y":0.28},"flow":-150,"density":1.05,"beams":1,"contrast":0.4,"greenRatio":0.3}' aria-hidden="true"></svg>
+  <div class="page-head__veil"></div>
+
+  <div class="wrap page-head__inner">
+    <span class="kicker">Archive / 文章</span>
+    <h1 class="page-head__title"><span data-glitch="ARCHIVE">ARCHIVE</span></h1>
+    <p class="page-head__desc">
+      所有写过的文章都在这里，按分类筛选。技术笔记偏多，偶尔夹带一点碎念。
+    </p>
+    <div class="page-head__stat">
+      <div><b>04</b><span>Posts</span></div>
+      <div><b>03</b><span>Categories</span></div>
+      <div><b>2026</b><span>Since</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="slant slant--ink-2 slant--rev" aria-hidden="true"></div>
+
+<section class="sec sec--ink-2">
+  <div class="wrap">
+
+    <div class="filters reveal" data-filters>
+      <button class="filter is-active" type="button" data-filter="all">全部</button>
+      <button class="filter" type="button" data-filter="杂谈">杂谈</button>
+      <button class="filter" type="button" data-filter="Web安全">Web 安全</button>
+      <button class="filter" type="button" data-filter="后端">后端</button>
+    </div>
+
+    <div class="posts">
+      <a class="post-card reveal" href="posts/moss-blog-build.html" data-cat="杂谈">
+        <span class="post-card__idx">001</span>
+        <div>
+          <div class="post-card__meta">
+            <span>2026.09.28</span>
+            <span class="cat">杂谈</span>
+            <span>12 min</span>
+          </div>
+          <h2 class="post-card__title">从零搭一个 MOSS 风格的个人博客</h2>
+          <p class="post-card__excerpt">黑白单色、荧光绿斜线、故障字——这套视觉到底是怎么用纯 CSS 变量和几行 SVG 几何生成器做出来的，以及为什么我放弃了现成主题。</p>
+        </div>
+        <span class="post-card__go" aria-hidden="true">→</span>
+      </a>
+
+      <a class="post-card reveal" href="posts/mysql-index.html" data-cat="后端">
+        <span class="post-card__idx">002</span>
+        <div>
+          <div class="post-card__meta">
+            <span>2026.09.15</span>
+            <span class="cat">后端</span>
+            <span>16 min</span>
+          </div>
+          <h2 class="post-card__title">MySQL 索引失效的常见写法</h2>
+          <p class="post-card__excerpt">函数包裹列、隐式类型转换、前导模糊、范围查询后的列——把那些"写了索引却还是全表扫描"的场景挨个复现一遍。</p>
+        </div>
+        <span class="post-card__go" aria-hidden="true">→</span>
+      </a>
+
+      <a class="post-card reveal" href="posts/xss-labs.html" data-cat="Web安全">
+        <span class="post-card__idx">003</span>
+        <div>
+          <div class="post-card__meta">
+            <span>2026.08.27</span>
+            <span class="cat">Web 安全</span>
+            <span>18 min</span>
+          </div>
+          <h2 class="post-card__title">XSS-labs 20 关通关总结</h2>
+          <p class="post-card__excerpt">按防御手法把 20 关串一遍：从零过滤、属性注入，到 htmlspecialchars 的编码陷阱与标签黑名单绕过。</p>
+        </div>
+        <span class="post-card__go" aria-hidden="true">→</span>
+      </a>
+
+      <a class="post-card reveal" href="posts/sql-injection.html" data-cat="Web安全">
+        <span class="post-card__idx">004</span>
+        <div>
+          <div class="post-card__meta">
+            <span>2026.08.20</span>
+            <span class="cat">Web 安全</span>
+            <span>22 min</span>
+          </div>
+          <h2 class="post-card__title">SQL 注入：从 union 到盲注的系统梳理</h2>
+          <p class="post-card__excerpt">把注入的判定、利用、绕过与防御拉成一条线，重点讲清楚"为什么这样写能出数据"，而不是背 payload。</p>
+        </div>
+        <span class="post-card__go" aria-hidden="true">→</span>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<div class="slant slant--2-ink" aria-hidden="true"></div>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <span class="brand__text">Qian<em>mi</em></span>
+        <p>吵闹的都市里，总需要于一方自留地中，视真我。</p>
+      </div>
+      <div class="footer__cols">
+        <div class="footer__col">
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="index.html">首页</a></li>
+            <li><a href="archive.html">文章</a></li>
+            <li><a href="projects.html">项目</a></li>
+            <li><a href="about.html">关于</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Elsewhere</h4>
+          <ul>
+            <li><a href="https://github.com/qianmi-qm" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a href="mailto:qianmi@example.com">Email</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© <span data-year>2026</span> QIANMI · ALL RIGHTS RESERVED</span>
+      <span>BLACK TERMINAL <em>v5.0</em> / BUILT BY HAND</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/moss.js"></script>
+</body>
+</html>

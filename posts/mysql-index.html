@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MySQL 索引失效的常见写法 // QIANMI</title>
+<meta name="description" content="把那些「写了索引却还是全表扫描」的场景挨个复现一遍。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23050706'/%3E%3Cpath d='M6 34 L34 6 L26 34 Z' fill='%2300ff41'/%3E%3Cpath d='M6 34 L34 6 L20 34 Z' fill='%23ffffff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/moss.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav__inner">
+    <a class="brand" href="../index.html" aria-label="QIANMI 首页">
+      <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect width="40" height="40" fill="#050706"/>
+        <path d="M7 33 L33 7 L25 33 Z" fill="#00ff41"/>
+        <path d="M7 33 L33 7 L19 33 Z" fill="#fff"/>
+      </svg>
+      <span class="brand__text">Qian<em>mi</em></span>
+    </a>
+    <div class="nav__links">
+      <a class="nav__link" href="../index.html">Index</a>
+      <a class="nav__link" href="../archive.html" aria-current="page">文章</a>
+      <a class="nav__link" href="../projects.html">项目</a>
+      <a class="nav__link" href="../about.html">关于</a>
+      <a class="nav__gh" href="https://github.com/qianmi-qm" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="nav__toggle" type="button" aria-label="打开导航菜单" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<header class="article-head">
+  <svg class="article-head__shards" data-shard-field='{"seed":41,"focal":{"x":0.3,"y":0.34},"flow":-155,"density":0.95,"beams":1,"contrast":0.4,"greenRatio":0.3}' aria-hidden="true"></svg>
+  <div class="article-head__veil"></div>
+  <div class="wrap article-head__inner">
+    <span class="kicker">后端</span>
+    <h1 class="article-head__title">MySQL 索引失效的常见写法</h1>
+    <div class="article-head__meta">
+      <span>2026.09.15</span>
+      <span class="cat">后端</span>
+      <span>16 min read</span>
+    </div>
+  </div>
+</header>
+
+<div class="slant slant--ink-2 slant--rev" aria-hidden="true"></div>
+
+<article class="article-body">
+  <div class="wrap">
+    <div class="prose">
+
+      <p>
+        "我明明加了索引，为什么还是慢？"——这是我在排查慢查询时最常遇到的情况。
+        索引存在 ≠ 索引生效，优化器在评估成本后完全可能选择放弃它。
+      </p>
+      <p>
+        这篇把我实际踩过的失效场景整理一遍，每个都给出复现 SQL 和判断依据。
+      </p>
+
+      <h2>一、先用 EXPLAIN 说话</h2>
+      <p>
+        不要靠感觉猜。在 MySQL 8 里用 <code>EXPLAIN ANALYZE</code> 能直接看到实际执行耗时，
+        比传统 <code>EXPLAIN</code> 的估算值更可靠。
+      </p>
+      <pre data-lang="sql"><code>EXPLAIN ANALYZE
+SELECT id, name, created_at
+FROM users
+WHERE DATE(created_at) = '2026-09-01';</code></pre>
+      <p>
+        关注三个字段：<code>type</code>（出现 <code>ALL</code> 就是全表扫描）、
+        <code>key</code>（实际使用的索引，为 <code>NULL</code> 说明没用上）、
+        <code>rows</code>（预估扫描行数，越接近总行数越危险）。
+      </p>
+
+      <h2>二、在索引列上做运算或调函数</h2>
+      <p>
+        这是最经典的一种。索引里存的是<strong>列的原值</strong>，
+        一旦你把它包进函数，B+ 树就没法按顺序定位了。
+      </p>
+      <pre data-lang="sql"><code>-- 失效：索引列被 DATE() 包裹
+SELECT * FROM users WHERE DATE(created_at) = '2026-09-01';
+
+-- 生效：改写成范围查询
+SELECT * FROM users
+WHERE created_at &gt;= '2026-09-01 00:00:00'
+  AND created_at &lt;  '2026-09-02 00:00:00';</code></pre>
+      <p>
+        同理还有 <code>WHERE id + 1 = 10</code>、<code>WHERE YEAR(created_at) = 2026</code>，
+        都是把索引列变成了表达式。改写的方向只有一个：<strong>让索引列单独出现在比较符号的一侧</strong>。
+      </p>
+
+      <h2>三、隐式类型转换</h2>
+      <p>
+        这个坑很隐蔽，因为 SQL 看起来完全正常。当字符串列和数字比较时，
+        MySQL 会把<strong>列</strong>转成数字，而不是把参数转成字符串——
+        于是又变成了"在索引列上做运算"。
+      </p>
+      <pre data-lang="sql"><code>-- phone 是 VARCHAR(20)，且建了索引
+SELECT * FROM users WHERE phone = 13800138000;   -- 失效
+
+-- 显式加引号
+SELECT * FROM users WHERE phone = '13800138000'; -- 生效</code></pre>
+      <p>
+        反过来，如果列是 <code>INT</code> 而参数是字符串 <code>'123'</code>，
+        转换方向对索引友好，索引仍然可用。所以规律是：
+        <strong>参数类型要跟列类型一致，拿不准就加引号</strong>。
+      </p>
+
+      <h2>四、前导模糊匹配</h2>
+      <p>
+        B+ 树是按前缀有序的，<code>LIKE '%abc'</code> 无法确定从哪个位置开始找。
+      </p>
+      <table>
+        <thead>
+          <tr><th>写法</th><th>索引</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>LIKE 'abc%'</code></td><td>生效</td><td>前缀确定，可范围扫描</td></tr>
+          <tr><td><code>LIKE '%abc'</code></td><td>失效</td><td>前缀未知</td></tr>
+          <tr><td><code>LIKE '%abc%'</code></td><td>失效</td><td>同上</td></tr>
+        </tbody>
+      </table>
+      <p>
+        真要支持全文模糊搜索，应该上全文索引（<code>FULLTEXT</code>）或者独立的搜索引擎，
+        而不是在大表上硬扛 <code>LIKE '%x%'</code>。
+      </p>
+
+      <h2>五、OR 连接了未索引的列</h2>
+      <pre data-lang="sql"><code>-- name 有索引，remark 没有
+SELECT * FROM users WHERE name = 'qianmi' OR remark = 'x';  -- 失效
+
+-- 方案一：给 remark 也加索引
+-- 方案二：拆成 UNION
+SELECT * FROM users WHERE name = 'qianmi'
+UNION
+SELECT * FROM users WHERE remark = 'x';</code></pre>
+      <p>
+        只要 OR 两侧有一侧走不了索引，整个查询就只能全表扫描。
+        优化器不会帮你拆，得自己动手。
+      </p>
+
+      <h2>六、联合索引的最左前缀</h2>
+      <p>
+        建了 <code>(a, b, c)</code> 的联合索引，等价于建了 <code>(a)</code>、<code>(a,b)</code>、<code>(a,b,c)</code> 三个索引。
+        跳过 <code>a</code> 直接查 <code>b</code>，索引就用不上。
+      </p>
+      <pre data-lang="sql"><code>-- 索引：(user_id, status, created_at)
+
+WHERE user_id = 1 AND status = 2              -- 生效（用到前两列）
+WHERE user_id = 1 AND created_at &gt; '2026-01'  -- 部分生效（只用 user_id）
+WHERE status = 2 AND created_at &gt; '2026-01'   -- 失效（跳过最左列）</code></pre>
+      <blockquote>
+        注意第二行：<code>user_id</code> 用上了索引，但 <code>created_at</code> 没走索引。
+        因为中间跳过了 <code>status</code>，B+ 树在 <code>user_id</code> 相同的区间内
+        并不按 <code>created_at</code> 有序。
+      </blockquote>
+
+      <h2>七、范围查询之后的列</h2>
+      <p>
+        这条经常和上一条一起出现。在联合索引里，一旦某一列用了范围条件，
+        <strong>它后面的列就无法再用于精确定位</strong>，只能回表后过滤。
+      </p>
+      <pre data-lang="sql"><code>-- 索引：(a, b, c)
+WHERE a = 1 AND b &gt; 10 AND c = 3</code></pre>
+      <p>
+        这里 <code>a</code> 和 <code>b</code> 用上了索引，<code>c = 3</code> 只能在回表后筛。
+        所以联合索引的列序设计要遵循：<strong>等值条件在前，范围条件在后</strong>。
+      </p>
+
+      <h2>八、其他容易忽略的点</h2>
+      <ul>
+        <li><code>IS NULL</code> / <code>IS NOT NULL</code>：单列索引下通常仍可走索引，但选择性差时优化器会放弃。</li>
+        <li><code>NOT IN</code> / <code>!=</code>：无法使用索引做范围扫描。</li>
+        <li>字符集不一致的 JOIN：两表关联列字符集不同会触发隐式转换，导致被驱动表的索引失效。</li>
+        <li>数据量太小或选择性太差：优化器判断走索引比全表扫更贵，主动放弃。</li>
+      </ul>
+
+      <h2>九、小结</h2>
+      <p>
+        所有失效场景其实可以归到一句话：<strong>优化器无法利用 B+ 树的有序性去缩小扫描范围</strong>。
+        要么是索引列被包在表达式里、要么是最左前缀被跳过、
+        要么是范围条件截断了后续列的有序性。
+      </p>
+      <p>
+        排查时不要背清单，直接看 <code>EXPLAIN</code> 的 <code>key</code> 和 <code>rows</code>，
+        再用上面的规律反推原因，会快得多。
+      </p>
+
+    </div>
+  </div>
+</article>
+
+<section class="article-foot">
+  <div class="wrap article-foot__inner">
+    <a class="btn btn--ghost" href="moss-blog-build.html"><span>← 上一篇：MOSS 风格博客搭建</span></a>
+    <a class="btn" href="xss-labs.html"><span>下一篇：XSS-labs 20 关通关总结 →</span></a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__bottom" style="padding-top:0;border:0">
+      <span>© <span data-year>2026</span> QIANMI · ALL RIGHTS RESERVED</span>
+      <span>BLACK TERMINAL <em>v5.0</em> / BUILT BY HAND</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/moss.js"></script>
+</body>
+</html>

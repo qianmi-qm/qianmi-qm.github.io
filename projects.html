@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>项目 // QIANMI</title>
+<meta name="description" content="QIANMI 的开源项目与实验作品。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23050706'/%3E%3Cpath d='M6 34 L34 6 L26 34 Z' fill='%2300ff41'/%3E%3Cpath d='M6 34 L34 6 L20 34 Z' fill='%23ffffff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/moss.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav__inner">
+    <a class="brand" href="index.html" aria-label="QIANMI 首页">
+      <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect width="40" height="40" fill="#050706"/>
+        <path d="M7 33 L33 7 L25 33 Z" fill="#00ff41"/>
+        <path d="M7 33 L33 7 L19 33 Z" fill="#fff"/>
+      </svg>
+      <span class="brand__text">Qian<em>mi</em></span>
+    </a>
+    <div class="nav__links">
+      <a class="nav__link" href="index.html">Index</a>
+      <a class="nav__link" href="archive.html">文章</a>
+      <a class="nav__link" href="projects.html" aria-current="page">项目</a>
+      <a class="nav__link" href="about.html">关于</a>
+      <a class="nav__gh" href="https://github.com/qianmi-qm" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="nav__toggle" type="button" aria-label="打开导航菜单" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<header class="page-head">
+  <svg class="page-head__shards" data-shard-field='{"seed":77,"focal":{"x":0.22,"y":0.62},"flow":-145,"density":1.05,"beams":1,"contrast":0.42,"greenRatio":0.3}' aria-hidden="true"></svg>
+  <div class="page-head__veil"></div>
+
+  <div class="wrap page-head__inner">
+    <span class="kicker">Projects / 项目</span>
+    <h1 class="page-head__title"><span data-glitch="PROJECTS">PROJECTS</span></h1>
+    <p class="page-head__desc">
+      折腾过的代码都在这里。数量不多，但每一个都是真跑起来过的东西。
+      欢迎 star，也欢迎一起改进。
+    </p>
+    <div class="page-head__stat">
+      <div><b>06</b><span>Repos</span></div>
+      <div><b>04</b><span>Stack</span></div>
+      <div><b>∞</b><span>Commits</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="slant slant--ink-2 slant--rev" aria-hidden="true"></div>
+
+<section class="sec sec--ink-2">
+  <div class="wrap">
+    <div class="sec__head reveal">
+      <span class="kicker">Selected / 01</span>
+      <h2 class="sec__title">主要项目</h2>
+      <p class="sec__desc">按投入程度排序，前面几个是长期维护的。</p>
+    </div>
+
+    <div class="proj-grid">
+      <article class="proj-card reveal" data-delay="0">
+        <span class="proj-card__id">PRJ-001 / ACTIVE</span>
+        <h3 class="proj-card__name">qianmi-blog</h3>
+        <p class="proj-card__desc">
+          本站。纯静态、零构建的博客系统，视觉层由 CSS 变量 + 程序化 SVG 几何生成器构成，
+          没有引入任何前端框架或主题。
+        </p>
+        <div class="proj-card__stack">
+          <span>HTML</span><span>CSS</span><span>Vanilla JS</span><span>GitHub Pages</span>
+        </div>
+        <div class="proj-card__links">
+          <a href="https://github.com/qianmi-qm" target="_blank" rel="noopener">Source →</a>
+        </div>
+      </article>
+
+      <article class="proj-card reveal" data-delay="80">
+        <span class="proj-card__id">PRJ-002 / ACTIVE</span>
+        <h3 class="proj-card__name">sec-notes</h3>
+        <p class="proj-card__desc">
+          Web 安全靶场笔记合集。SQL-labs、XSS-labs 的完整通关思路、payload 速查表，
+          以及每个关卡背后的防御原理。
+        </p>
+        <div class="proj-card__stack">
+          <span>Markdown</span><span>Payload</span><span>OWASP</span>
+        </div>
+        <div class="proj-card__links">
+          <a href="https://github.com/qianmi-qm" target="_blank" rel="noopener">Source →</a>
+        </div>
+      </article>
+
+      <article class="proj-card reveal" data-delay="160">
+        <span class="proj-card__id">PRJ-003 / WIP</span>
+        <h3 class="proj-card__name">spring-ai-playground</h3>
+        <p class="proj-card__desc">
+          Spring Boot 接入大模型的实验场。覆盖对话、向量检索、工具调用（Function Calling）
+          与 MCP 集成的最小可运行示例。
+        </p>
+        <div class="proj-card__stack">
+          <span>Java</span><span>Spring Boot</span><span>Spring AI</span><span>MCP</span>
+        </div>
+        <div class="proj-card__links">
+          <a href="https://github.com/qianmi-qm" target="_blank" rel="noopener">Source →</a>
+        </div>
+      </article>
+
+      <article class="proj-card reveal" data-delay="0">
+        <span class="proj-card__id">PRJ-004 / WIP</span>
+        <h3 class="proj-card__name">xss-payload-lab</h3>
+        <p class="proj-card__desc">
+          一个本地可跑的 XSS 练习环境，覆盖反射型、存储型、DOM 型三类场景，
+          用来验证各种过滤规则下的绕过方式。
+        </p>
+        <div class="proj-card__stack">
+          <span>PHP</span><span>Docker</span><span>Security</span>
+        </div>
+        <div class="proj-card__links">
+          <a href="https://github.com/qianmi-qm" target="_blank" rel="noopener">Source →</a>
+        </div>
+      </article>
+
+      <article class="proj-card reveal" data-delay="80">
+        <span class="proj-card__id">PRJ-005 / ACTIVE</span>
+        <h3 class="proj-card__name">mysql-lab</h3>
+        <p class="proj-card__desc">
+          MySQL 学习实验库。索引失效复现脚本、执行计划对比、锁与事务隔离级别的可观测 Demo。
+        </p>
+        <div class="proj-card__stack">
+          <span>MySQL</span><span>SQL</span><span>Explain</span>
+        </div>
+        <div class="proj-card__links">
+          <a href="https://github.com/qianmi-qm" target="_blank" rel="noopener">Source →</a>
+        </div>
+      </article>
+
+      <article class="proj-card reveal" data-delay="160">
+        <span class="proj-card__id">PRJ-006 / WIP</span>
+        <h3 class="proj-card__name">vue-admin-starter</h3>
+        <p class="proj-card__desc">
+          Vue 3 + TypeScript + Vite 的后台起手模板，内置权限路由、请求封装与暗色主题。
+        </p>
+        <div class="proj-card__stack">
+          <span>Vue 3</span><span>TypeScript</span><span>Vite</span>
+        </div>
+        <div class="proj-card__links">
+          <a href="https://github.com/qianmi-qm" target="_blank" rel="noopener">Source →</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div class="slant slant--2-ink" aria-hidden="true"></div>
+
+<section class="sec sec--ink">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <span class="kicker">Building / 02</span>
+        <h2 class="sec__title" style="margin-bottom:1.4rem">建设中</h2>
+        <p>
+          这里以后会放更多项目。目前有几个还在本地跑着，等到能见人了再推上来。
+          路过的朋友可以先到我的 GitHub 主页逛逛。
+        </p>
+      </div>
+      <aside class="about-facts reveal" data-delay="120">
+        <p class="mono" style="margin:0;font-size:0.8rem;letter-spacing:0.18em;color:var(--neon)">
+          STATUS: <span style="color:var(--paper)">LOADING…</span>
+        </p>
+        <p style="margin:0.9rem 0 1.4rem;font-size:0.9rem;color:var(--grey-55);line-height:1.8">
+          慢慢来，比较快。
+        </p>
+        <a class="btn btn--ghost" href="https://github.com/qianmi-qm" target="_blank" rel="noopener"><span>前往 GitHub 主页 →</span></a>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <span class="brand__text">Qian<em>mi</em></span>
+        <p>吵闹的都市里，总需要于一方自留地中，视真我。</p>
+      </div>
+      <div class="footer__cols">
+        <div class="footer__col">
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="index.html">首页</a></li>
+            <li><a href="archive.html">文章</a></li>
+            <li><a href="projects.html">项目</a></li>
+            <li><a href="about.html">关于</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Elsewhere</h4>
+          <ul>
+            <li><a href="https://github.com/qianmi-qm" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a href="mailto:qianmi@example.com">Email</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© <span data-year>2026</span> QIANMI · ALL RIGHTS RESERVED</span>
+      <span>BLACK TERMINAL <em>v5.0</em> / BUILT BY HAND</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/moss.js"></script>
+</body>
+</html>

