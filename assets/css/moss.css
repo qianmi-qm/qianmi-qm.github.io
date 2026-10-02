@@ -754,7 +754,7 @@ body::after {
 .ticker__track {
   display: flex;
   width: max-content;
-  animation: ticker-run 26s linear infinite;
+  animation: ticker-run 40s linear infinite;
 }
 
 .ticker:hover .ticker__track {
@@ -778,7 +778,7 @@ body::after {
   font-size: 0.8rem;
   font-weight: 800;
   letter-spacing: 0.24em;
-  text-transform: uppercase;
+  text-transform: none;
   white-space: nowrap;
   padding-inline: 1.4rem;
 }
