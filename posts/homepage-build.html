@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>从零搭一个黑底终端风格的个人博客 // QIANMI</title>
+<meta name="description" content="纯黑基底、荧光绿强调、锐角斜切、程序化几何碎片——这套视觉是怎么用零依赖的 CSS 变量和几行 SVG 生成器做出来的，以及怎么免费部署到 GitHub Pages 长期在线。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23050706'/%3E%3Cpath d='M6 34 L34 6 L26 34 Z' fill='%2300ff41'/%3E%3Cpath d='M6 34 L34 6 L20 34 Z' fill='%23ffffff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/moss.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav__inner">
+    <a class="brand" href="../index.html" aria-label="QIANMI 首页">
+      <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect width="40" height="40" fill="#050706"/>
+        <path d="M7 33 L33 7 L25 33 Z" fill="#00ff41"/>
+        <path d="M7 33 L33 7 L19 33 Z" fill="#fff"/>
+      </svg>
+      <span class="brand__text">Qian<em>mi</em></span>
+    </a>
+    <div class="nav__links">
+      <a class="nav__link" href="../index.html">主页</a>
+      <a class="nav__link" href="../archive.html" aria-current="page">文章</a>
+      <a class="nav__link" href="../projects.html">项目</a>
+      <a class="nav__link" href="../about.html">我的</a>
+      <a class="nav__gh" href="https://github.com/qianmi-qm" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="nav__toggle" type="button" aria-label="打开导航菜单" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<header class="article-head">
+  <svg class="article-head__shards" data-shard-field='{"seed":19,"focal":{"x":0.66,"y":0.4},"flow":-140,"density":0.95,"beams":1,"contrast":0.4,"greenRatio":0.3}' aria-hidden="true"></svg>
+  <div class="article-head__veil"></div>
+  <div class="wrap article-head__inner">
+    <span class="kicker">杂谈</span>
+    <h1 class="article-head__title">从零搭一个黑底终端风格的个人博客</h1>
+    <div class="article-head__meta">
+      <span>2026.10.02</span>
+      <span class="cat">杂谈</span>
+      <span>14 min read</span>
+    </div>
+  </div>
+</header>
+
+<div class="slant slant--ink-2 slant--rev" aria-hidden="true"></div>
+
+<article class="article-body">
+  <div class="wrap">
+    <div class="prose">
+
+      <p>
+        想搭个人博客这件事，在我待办清单里躺了很久。中途试过几个现成主题——
+        装完确实五分钟就能跑起来，但改到第三天就发现，每一处想动的地方都在跟主题的默认样式打架。
+        与其在别人的体系里做减法，不如从零写一套。
+      </p>
+      <p>
+        目标很明确：那种<strong>纯黑终端、荧光绿做唯一强调色、用锐利斜线切割画面</strong>的技术海报感。
+        它看起来元素很多，但拆开之后其实是三条约束加一点几何计算。
+      </p>
+
+      <h2>一、先定约束，再谈设计</h2>
+      <p>
+        大多数"高级感"不是靠堆元素堆出来的，而是靠限制。这套视觉的约束只有三条：
+      </p>
+      <ol>
+        <li><strong>只有三种颜色</strong>：纯黑、纯白、荧光绿。灰阶只允许作为过渡，不允许出现第四种色相。</li>
+        <li><strong>绿色只做强调</strong>：面积占比压在 10% 上下。它一旦变成主色，页面就从"克制的技术感"滑向"廉价的赛博朋克"。</li>
+        <li><strong>拒绝圆角与规整</strong>：容器、色块、过渡带一律带角度，横平竖直只留给文字排版。</li>
+      </ol>
+      <p>
+        第三条是这套视觉的核心。人眼对斜线比直线敏感得多，
+        一条 30 度的切割线能让整块版面立刻"活"过来——这也是它看起来"有速度感"的根本原因。
+      </p>
+
+      <h2>二、设计 token 先落地</h2>
+      <p>
+        动手写组件之前，先把颜色、字体、间距全部收进 CSS 变量。
+        之后所有组件只引用变量，换配色只需要改一处。
+      </p>
+
+      <pre data-lang="css"><code>:root {
+  --bg:    #050706;   /* 基底：近黑 */
+  --bg-2:  #0b0e0c;   /* 交替区块：比基底亮一档 */
+  --paper: #ffffff;   /* 纯白：主文字与碎片 */
+  --neon:  #00ff41;   /* 荧光绿：唯一强调色 */
+
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  --cjk:  "Noto Sans SC", -apple-system, "PingFang SC", sans-serif;
+
+  --cut:  18px;       /* 斜切角尺寸 */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}</code></pre>
+
+      <p>
+        这里有个细节值得说：区块之间不是用边框分隔的，而是靠
+        <code>--bg → --bg-2 → --bg-3 → --bg-4</code> 四档近黑的<strong>明度差</strong>。
+        纯黑底上画白色边框会显得脏，而极小的明度差既能划出层次，又不会破坏"整体是一块黑"的观感。
+      </p>
+
+      <h2>三、几何碎片场：用代码画，不用贴图</h2>
+      <p>
+        首页背景那片放射状的黑白碎片，是整套视觉里最"唬人"的部分。
+        一开始我想找素材图，很快发现三个问题：图片体积大、无法随窗口自适应、
+        而且每张图的角度是固定的，换到不同尺寸的容器里立刻露馅。
+      </p>
+      <p>
+        于是改成<strong>用代码生成几何</strong>。迭代了几版之后，稳定成三种基本形状：
+        闪电、细长三角、楔形。它们都从一个焦点出发，沿主方向飞散。
+      </p>
+
+      <pre data-lang="javascript"><code>/* 闪电：中轴按折线摆动，宽度从根部渐缩到尖端收 0 */
+function bolt(rnd, bx, by, ang, len, w0, kink) {
+  var dx = Math.cos(ang), dy = Math.sin(ang);
+  var nx = -dy, ny = dx;
+
+  var stops = [0, 0.26, 0.5, 0.74, 1];
+  var zig   = [0, kink, -kink * 0.8, kink * 0.55, 0];
+  var spine = [];
+
+  for (var i = 0; i < stops.length; i++) {
+    var t = stops[i] + (rnd() - 0.5) * 0.05;
+    spine.push([
+      bx + dx * len * t + nx * zig[i],
+      by + dy * len * t + ny * zig[i]
+    ]);
+  }
+  /* 右侧边（根→尖）→ 尖端收成一点 → 左侧边（尖→根） */
+  // ... 拼成闭合多边形返回
+}</code></pre>
+
+      <p>
+        三个参数决定了最终观感：
+      </p>
+      <ul>
+        <li><code>kink</code> 控制闪电的折角幅度。太小看着像普通直线，太大就断了，<code>18 ~ 26</code> 是甜区。</li>
+        <li><code>len</code> 要拉到足够跑出画布，这样碎片看起来才是"从画面外冲进来"的，而不是悬浮的贴纸。</li>
+        <li><code>w0</code> 是根部宽度，配合 <code>(1 - t)</code> 的线性收缩，让每根闪电都是"根粗尖细"，自带方向感。</li>
+      </ul>
+
+      <p>
+        但真正让画面变好看的不是形状，而是<strong>分布</strong>。最早我是从一个焦点往外撒，
+        结果所有元素抱团挤在中心，四周一片空。后来写了个分层网格散布函数：
+      </p>
+
+      <pre data-lang="javascript"><code>/* 把画布切成 cols×rows 格，每格取抖动后的中心点，再洗牌打乱顺序 */
+function scatter(rnd, cols, rows, jitter) {
+  var out = [];
+  for (var i = 0; i < cols; i++) {
+    for (var j = 0; j < rows; j++) {
+      out.push({
+        x: (i + 0.5 + (rnd() - 0.5) * jitter) / cols,
+        y: (j + 0.5 + (rnd() - 0.5) * jitter) / rows
+      });
+    }
+  }
+  // Fisher-Yates 洗牌，避免"按格子顺序铺"的规律感
+  return out;
+}</code></pre>
+
+      <p>
+        这一改动的效果是决定性的：元素从"中心一团"变成"铺满全屏但疏密有致"。
+        <code>jitter</code> 的作用是打破网格的规整感，让分布看起来是随机的而不是排出来的。
+      </p>
+
+      <blockquote>
+        随机数用的是 <code>mulberry32</code> 这类<strong>带种子的伪随机</strong>，
+        而不是 <code>Math.random()</code>。这样每个页面配一个固定的 seed，
+        每次刷新长得一模一样；否则用户每刷新一次背景就换一个样，会显得很廉价。
+        同时它也保证了"同一个 seed 必然复现同一张构图"，方便调参。
+      </blockquote>
+
+      <h2>四、锐角化：clip-path 与斜切过渡带</h2>
+      <p>
+        全站拒绝圆角，靠的是 <code>clip-path</code>。按钮、卡片、图片容器都切掉对角：
+      </p>
+      <pre data-lang="css"><code>.btn {
+  clip-path: polygon(
+    0 0, calc(100% - var(--cut)) 0, 100% var(--cut),
+    100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut))
+  );
+}
+.btn:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: inset 0 0 0 2px var(--neon), 5px 5px 0 var(--neon);
+}</code></pre>
+      <p>
+        悬停时向左上位移、右下角投出一块实心荧光绿阴影——
+        这种"错位硬阴影"是海报排版的常用手法，比柔和的 <code>box-shadow</code> 更符合锐利的调性。
+      </p>
+
+      <p>
+        区块之间的斜线接缝，用了一个很省事的技巧：一个容器，背景是<strong>上一块的颜色</strong>，
+        内部伪元素铺满并填<strong>下一块的颜色</strong>，再给它一个三角形裁切。
+      </p>
+      <pre data-lang="css"><code>.slant {
+  position: relative;
+  height: clamp(38px, 5vw, 78px);
+  background: var(--a);          /* 上一块的颜色 */
+}
+.slant::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--b);          /* 下一块的颜色 */
+  clip-path: polygon(0 100%, 100% 0, 100% 100%);
+}</code></pre>
+      <p>
+        这样接缝天然严丝合缝，不用算负 margin，也不怕响应式下高度变化。
+      </p>
+
+      <h2>五、零依赖、零构建</h2>
+      <p>
+        整个站点最后是：<strong>一个 CSS 文件、一个 JS 文件、几个 HTML 页面</strong>。
+        没有 npm，没有打包器，没有框架，没有构建步骤。
+      </p>
+      <p>
+        这个选择不是"反工程"，而是<strong>匹配需求</strong>。博客是纯静态内容站，
+        没有状态管理、没有路由、没有数据请求——引入一套前端工具链，
+        换来的是每次改一篇文章都要等构建，以及一个几百 MB 的 <code>node_modules</code>。
+        对一个只有几个页面的站点来说，这笔账不划算。
+      </p>
+      <p>
+        代价是要手写一些重复的 HTML（比如每个页面都要复制导航和页脚）。
+        但对这个体量来说，重复的成本远低于维护一套模板引擎或静态站点生成器。
+        <strong>知道什么时候不该上工具，和会用工具同样重要。</strong>
+      </p>
+
+      <h2>六、部署：让它一直在线</h2>
+      <p>
+        站点托管在 <strong>GitHub Pages</strong> 上，仓库名必须是
+        <code>&lt;用户名&gt;.github.io</code> 这个固定格式，这样访问地址就是干净的
+        <code>https://用户名.github.io</code>，不带任何子路径。
+      </p>
+      <p>
+        有两个文件是部署前必须准备好的：
+      </p>
+      <ul>
+        <li><code>.nojekyll</code>：一个空文件，告诉 GitHub Pages 跳过 Jekyll 处理，直接按静态文件原样发布。没有它，以下划线开头的文件或目录会被吞掉。</li>
+        <li><code>.gitignore</code>：挡掉系统文件和编辑器配置，避免把无关内容提交上去。</li>
+      </ul>
+
+      <pre data-lang="bash"><code># 首次发布
+git init -b main
+git add -A
+git commit -m "init: blog"
+git remote add origin https://github.com/&lt;用户名&gt;/&lt;用户名&gt;.github.io.git
+git push -u origin main
+
+# 之后每次更新文章，只要三条命令
+git add -A
+git commit -m "post: 新增文章 xxx"
+git push</code></pre>
+
+      <p>
+        推送完成后，GitHub 会自动触发一次构建，一两分钟后新内容就生效，
+        不需要在仓库设置里反复操作。<strong>Pages 是免费的，也没有到期日</strong>——
+        只要仓库还在，站点就一直在线。
+      </p>
+
+      <blockquote>
+        实际部署时会遇到一个和代码无关的坑：国内网络访问 GitHub 不稳定，
+        表现为 TCP 能握手但 TLS 请求被间歇性掐断，<code>git push</code> 时不时失败。
+        这不是配置错误，重试通常就能过。另外要记住：<strong>这种不稳定只影响上传</strong>，
+        站点发布后是由 GitHub 的 CDN 对外服务的，和本地网络无关，访问速度不受影响。
+      </blockquote>
+
+      <h2>结语</h2>
+      <p>
+        回过头看，这个项目里真正花时间的不是写代码，而是<strong>做决定</strong>：
+        用几种颜色、要不要上框架、碎片怎么分布、区块怎么衔接。
+        代码只是这些决定的结果。
+      </p>
+      <p>
+        如果你也想做类似的视觉，建议从<strong>先定约束</strong>开始——
+        规定好"只能用哪三种颜色""哪些形状禁止出现""什么情况下不加元素"，
+        剩下的决定会突然变得容易很多。
+      </p>
+
+    </div>
+  </div>
+</article>
+
+<section class="article-foot">
+  <div class="wrap article-foot__inner">
+    <a class="btn btn--ghost" href="../archive.html"><span>← 返回文章列表</span></a>
+    <a class="btn" href="first-ai-program.html"><span>下一篇：我的第一个 AI 项目 →</span></a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__bottom" style="padding-top:0;border:0">
+      <span>© <span data-year>2026</span> QIANMI · ALL RIGHTS RESERVED</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/moss.js"></script>
+</body>
+</html>
