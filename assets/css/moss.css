@@ -38,6 +38,7 @@
   --gutter: clamp(1.15rem, 4vw, 3.5rem);
 
   --cut: 18px;              /* 斜切角尺寸 */
+  --strip-h: clamp(9px, 1.2vw, 13px);   /* 跑马灯下方装饰条高度 */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -741,13 +742,24 @@ body::after {
   60%, 100% { transform: translateY(100%); }
 }
 
+/* 跑马灯上方的滚动提示：静态流式版本（hero 内那枚为绝对定位） */
+.scroll-hint--strip {
+  position: static;
+  left: auto;
+  bottom: auto;
+  transform: none;
+  padding-block: clamp(1.1rem, 2.6vw, 1.7rem);
+}
+
 /* ---------- 9. 跑马灯 ---------- */
 .ticker {
   position: relative;
   background: var(--neon);
   color: var(--ink);
   overflow: hidden;
-  padding-block: 0.85rem;
+  /* 文字在「跑马灯 + 下方装饰条」整块荧光绿里上下等距 */
+  padding-top: calc(0.85rem + var(--strip-h) / 2);
+  padding-bottom: calc(0.85rem - var(--strip-h) / 2);
 }
 
 .ticker__track {
@@ -793,10 +805,15 @@ body::after {
   border-left: 8px solid var(--ink);
 }
 
-/* 荧光绿装饰条：完整条状（替代原来的楔形过渡带） */
+/* 跑马灯下方装饰条：通栏荧光绿，带斜向细纹 */
 .neon-bar {
-  height: clamp(10px, 1.4vw, 16px);
-  background: var(--neon);
+  height: var(--strip-h);
+  background-color: var(--neon);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(0, 0, 0, 0.28) 0 3px,
+    transparent 3px 9px
+  );
 }
 
 /* ---------- 10. 归档列表卡 ---------- */
@@ -1848,30 +1865,4 @@ body::after {
     opacity: 1;
     transform: none;
   }
-}
-
-/* ---------- 像素风光标 ---------- */
-html,
-body {
-  cursor: url("../img/cursor-default.png") 2 2, auto;
-}
-
-a,
-button,
-input,
-textarea,
-select,
-summary,
-label,
-.btn,
-.filter,
-.brand,
-.nav__link,
-.nav__gh,
-.nav__toggle,
-.post-card,
-.post-tile,
-.proj-card,
-[role="button"] {
-  cursor: url("../img/cursor-pointer.png") 12 4, pointer;
 }
