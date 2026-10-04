@@ -10,3 +10,6 @@ Desktop.ini
 
 # 日志
 *.log
+
+# 本地构建脚本（不发布到站点）
+tools/

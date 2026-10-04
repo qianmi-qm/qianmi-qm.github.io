@@ -748,7 +748,6 @@ body::after {
   color: var(--ink);
   overflow: hidden;
   padding-block: 0.85rem;
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 30px) 100%, 0 100%);
 }
 
 .ticker__track {
@@ -762,7 +761,8 @@ body::after {
 }
 
 @keyframes ticker-run {
-  to { transform: translateX(-50%); }
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
 }
 
 .ticker__group {
@@ -791,6 +791,12 @@ body::after {
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;
   border-left: 8px solid var(--ink);
+}
+
+/* 荧光绿装饰条：完整条状（替代原来的楔形过渡带） */
+.neon-bar {
+  height: clamp(10px, 1.4vw, 16px);
+  background: var(--neon);
 }
 
 /* ---------- 10. 归档列表卡 ---------- */
@@ -1842,4 +1848,30 @@ body::after {
     opacity: 1;
     transform: none;
   }
+}
+
+/* ---------- 像素风光标 ---------- */
+html,
+body {
+  cursor: url("../img/cursor-default.png") 2 2, auto;
+}
+
+a,
+button,
+input,
+textarea,
+select,
+summary,
+label,
+.btn,
+.filter,
+.brand,
+.nav__link,
+.nav__gh,
+.nav__toggle,
+.post-card,
+.post-tile,
+.proj-card,
+[role="button"] {
+  cursor: url("../img/cursor-pointer.png") 12 4, pointer;
 }
