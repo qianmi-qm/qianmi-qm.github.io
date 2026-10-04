@@ -454,12 +454,10 @@ body::after {
 /* ---------- 8. Hero ---------- */
 .hero {
   position: relative;
-  min-height: 100svh;
-  display: flex;
-  align-items: center;
   background: var(--bg);
   overflow: hidden;
-  padding-top: 68px;
+  /* 比例与内页页头（.page-head）保持一致，不再撑满整屏 */
+  padding: clamp(9rem, 16vw, 13rem) 0 clamp(3.5rem, 7vw, 6rem);
 }
 
 .hero__shards {
@@ -486,7 +484,6 @@ body::after {
 .hero__inner {
   position: relative;
   z-index: 3;
-  padding-block: clamp(5rem, 10vw, 8rem);
 }
 
 .hero__badge {
@@ -519,12 +516,12 @@ body::after {
 
 .hero__title {
   margin: 0;
-  font-size: clamp(3.4rem, 12.5vw, 10.5rem);
+  font-size: clamp(2.8rem, 8.5vw, 6.5rem);
   font-weight: 900;
   line-height: 0.95;
   letter-spacing: 0.01em;
   color: var(--fg);
-  transform: scaleX(1.14);
+  transform: scaleX(1.12);
   transform-origin: left center;
 }
 
