@@ -898,6 +898,21 @@ body::after {
   transform: translateX(6px);
 }
 
+/* 空状态：无文章时占位 */
+.posts-empty {
+  border: 1px solid var(--line);
+  background: var(--bg-3);
+  padding: clamp(2.6rem, 7vw, 4.5rem) clamp(1.4rem, 4vw, 3rem);
+  text-align: center;
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
+}
+
+.posts-empty p {
+  margin: 0.9rem 0 0;
+  font-size: 0.95rem;
+  color: var(--fg-dim);
+}
+
 
 
 
