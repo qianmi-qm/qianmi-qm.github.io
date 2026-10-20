@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>从零搭一个黑底终端风格的个人博客 // QIANMI</title>
+<meta name="description" content="黑底、荧光绿、斜切、程序化碎片——我定规矩，AI 写代码。记录这套视觉从零搭起来的过程，以及怎么免费扔到 GitHub Pages 上一直在线。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23050706'/%3E%3Cpath d='M6 34 L34 6 L26 34 Z' fill='%2300ff41'/%3E%3Cpath d='M6 34 L34 6 L20 34 Z' fill='%23ffffff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/moss.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav__inner">
+    <a class="brand" href="../index.html" aria-label="QIANMI 首页">
+      <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect width="40" height="40" fill="#050706"/>
+        <path d="M7 33 L33 7 L25 33 Z" fill="#00ff41"/>
+        <path d="M7 33 L33 7 L19 33 Z" fill="#fff"/>
+      </svg>
+      <span class="brand__text">Qian<em>mi</em></span>
+    </a>
+    <div class="nav__links">
+      <a class="nav__link" href="../index.html">主页</a>
+      <a class="nav__link" href="../archive.html" aria-current="page">文章</a>
+      <a class="nav__link" href="../projects.html">项目</a>
+      <a class="nav__gh" href="https://github.com/qianmi-qm" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <button class="nav__toggle" type="button" aria-label="打开导航菜单" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<header class="article-head">
+  <svg class="article-head__shards" data-shard-field='{"seed":53,"focal":{"x":0.3,"y":0.55},"flow":-150,"density":0.95,"beams":1,"contrast":0.42,"greenRatio":0.3}' aria-hidden="true"></svg>
+  <div class="article-head__veil"></div>
+  <div class="wrap article-head__inner">
+    <span class="kicker">杂谈</span>
+    <h1 class="article-head__title">从零搭一个黑底终端风格的个人博客</h1>
+    <div class="article-head__meta">
+      <span>2026.10.20</span>
+      <span class="cat">杂谈</span>
+      <span>13 min read</span>
+    </div>
+  </div>
+</header>
+
+<!-- ========== 滚动提示 + 跑马灯 ========== -->
+<div class="scroll-hint scroll-hint--strip" aria-hidden="true">
+  <i></i>
+  <span>Scroll</span>
+</div>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker__track">
+    <div class="ticker__group">
+      <span class="ticker__item">千米</span><span class="ticker__item">qianmi</span><span class="ticker__item">Kilometer</span>
+      <span class="ticker__item">千米</span><span class="ticker__item">qianmi</span><span class="ticker__item">Kilometer</span>
+      <span class="ticker__item">千米</span><span class="ticker__item">qianmi</span><span class="ticker__item">Kilometer</span>
+      <span class="ticker__item">千米</span><span class="ticker__item">qianmi</span><span class="ticker__item">Kilometer</span>
+      <span class="ticker__item">千米</span><span class="ticker__item">qianmi</span><span class="ticker__item">Kilometer</span>
+      <span class="ticker__item">千米</span><span class="ticker__item">qianmi</span><span class="ticker__item">Kilometer</span>
+    </div>
+    <div class="ticker__group">
+      <span class="ticker__item">千米</span><span class="ticker__item">qianmi</span><span class="ticker__item">Kilometer</span>
+      <span class="ticker__item">千米</span><span class="ticker__item">qianmi</span><span class="ticker__item">Kilometer</span>
+      <span class="ticker__item">千米</span><span class="ticker__item">qianmi</span><span class="ticker__item">Kilometer</span>
+      <span class="ticker__item">千米</span><span class="ticker__item">qianmi</span><span class="ticker__item">Kilometer</span>
+      <span class="ticker__item">千米</span><span class="ticker__item">qianmi</span><span class="ticker__item">Kilometer</span>
+      <span class="ticker__item">千米</span><span class="ticker__item">qianmi</span><span class="ticker__item">Kilometer</span>
+    </div>
+  </div>
+</div>
+
+<div class="neon-bar" aria-hidden="true"></div>
+
+<article class="article-body">
+  <div class="wrap">
+    <div class="prose">
+<p>这个博客长什么样，其实是<strong>我先说清楚"要什么"，再让 AI 把代码写出来</strong>的。配色、形状、排版怎么定，我说了算；HTML / CSS / JS 具体怎么敲，交给 AI。</p>
+<h2>一、规矩定好了，页面不烧心</h2>
+<p>我的灵感来自于音游的一些矢量楔形cd封面，偏向平面设计</p>
+<p>先立三条规矩：</p>
+<ol><li><strong>颜色就三种</strong>：黑、白、荧光绿。灰阶只当过渡，别的色儿一律不准露头。</li><li><strong>绿色只当点缀</strong>：面积压在 10% 上下。它一旦成了主色，页面会显得十分塑料。</li><li><strong>不许有圆角，不许规规矩矩</strong>：容器、色块、过渡带都得带角度，横平竖直只留给文字排版。</li></ol>
+<h2>二、把想法变成一行行变量</h2>
+<p>想法定完，第一步不是憋组件，而是先把它翻译成CSS变量。颜色、字体、间距全塞进变量里，后面所有组件都只引用变量——想换配色就改一处。</p>
+<pre data-lang="css"><code>:root {
+  --ink:   #000000;   /* 纯黑：跑马灯文字等 */
+  --bg:    #050706;   /* 基底：近黑 */
+  --bg-2:  #0b0e0c;   /* 交替区块：比基底亮一档 */
+  --bg-3:  #121614;
+  --bg-4:  #1a201c;
+  --paper: #ffffff;   /* 纯白：主文字与碎片 */
+
+  --neon:  #00ff41;   /* 荧光绿：唯一强调色 */
+
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  --cjk:  "Noto Sans SC", -apple-system, "PingFang SC", sans-serif;
+
+  --cut:    18px;                        /* 斜切角尺寸 */
+  --strip-h: clamp(9px, 1.2vw, 13px);    /* 跑马灯下方装饰条高度 */
+  --ease:   cubic-bezier(0.16, 1, 0.3, 1);
+}</code></pre>
+<h2>三、配饰点缀一下</h2>
+<p>首页背景那片放射状的碎片，让整套设计在视觉上更有风格，不显得空旷的同时也不会显得杂乱无章。</p>
+<p>所以我的做法是让代码去画。跟 AI 来回改了好几版，最后稳定成三种基本形状：闪电、细长三角、楔形。它们都从一个焦点出发，顺着主方向往外飞。</p>
+<pre data-lang="javascript"><code>/* 闪电：中轴按折线摆动，宽度从根部渐缩到尖端收 0 */
+function bolt(rnd, bx, by, ang, len, w0, kink) {
+  var dx = Math.cos(ang), dy = Math.sin(ang);
+  var nx = -dy, ny = dx;
+
+  var stops = [0, 0.26, 0.5, 0.74, 1];
+  var zig   = [0, kink, -kink * 0.8, kink * 0.55, 0];
+  var spine = [];
+  var i, t, half;
+
+  for (i = 0; i &lt; stops.length; i++) {
+    t = stops[i] + (rnd() - 0.5) * 0.05;
+    spine.push([
+      bx + dx * len * t + nx * zig[i],
+      by + dy * len * t + ny * zig[i]
+    ]);
+  }
+
+  var outline = [];
+  /* 右侧边（根 → 尖） */
+  for (i = 0; i &lt; spine.length - 1; i++) {
+    half = w0 * (1 - stops[i]) * (0.7 + rnd() * 0.5);
+    outline.push([spine[i][0] + nx * half, spine[i][1] + ny * half]);
+  }
+  /* 尖端收成一点 */
+  outline.push([spine[spine.length - 1][0], spine[spine.length - 1][1]]);
+  /* 左侧边（尖 → 根） */
+  for (i = spine.length - 2; i &gt;= 0; i--) {
+    half = w0 * (1 - stops[i]) * (0.7 + rnd() * 0.5);
+    outline.push([spine[i][0] - nx * half, spine[i][1] - ny * half]);
+  }
+  return outline;
+}</code></pre>
+<p>三个参数决定最终长啥样：</p>
+<ul><li><code>kink</code>：闪电的折角幅度。太小像根直线，太大直接断，<code>16 ~ 26</code> 是甜区。</li><li><code>len</code>：得拉到足够冲出画布，碎片才是"从画面外冲进来"的，而不是贴上去的贴纸。</li><li><code>w0</code>：根部宽度。配上 <code>(1 - t)</code> 的线性收缩，每根闪电就都是根粗尖细，自带方向感。</li></ul>
+<p>现在的碎片场是<strong>八个图层</strong>叠出来的，顺序固定，每层各管一件事：</p>
+<table><thead><tr><th>层</th><th>内容</th><th>作用</th></tr></thead><tbody><tr><td>0</td><td>氛围雾块</td><td>极大极淡，先压住背景</td></tr><tr><td>1</td><td>闪电（4~6 根）</td><td>主视觉，起点围绕焦点铺开</td></tr><tr><td>2</td><td>细三角针群</td><td>低视觉重量的点缀</td></tr><tr><td>3</td><td>楔形</td><td>制造"断裂"的对比</td></tr><tr><td>4</td><td>对角宽梁</td><td>贯穿画面的结构线</td></tr><tr><td>5</td><td>切缝</td><td>底色楔形，切出裂缝与纵深</td></tr><tr><td>6</td><td>水平细线组</td><td>横贯线 + 刻度齿，接上"工程图纸"的气质</td></tr><tr><td>7</td><td>十字标记</td><td>定位用的十字点</td></tr></tbody></table>
+<blockquote>随机数用的是 <code>mulberry32</code> 这种带种子的伪随机，没用 <code>Math.random()</code>。好处是每个页面配一个固定 seed，刷新多少次都长一个样；不然用户每刷一次背景就换一张，会显得冲撞。而且同一个 seed 必定复现同一张图，调参的时候心里有底——调烦了，换个 seed 就是新画面，之前满意的构图也不会丢。</blockquote>
+<p>最后再给这一整块加层<strong>滚动视差</strong>：监听到滚动，就用 <code>requestAnimationFrame</code> 把位移写进 <code>transform</code>（<code>translate3d</code> 加一点点放大），还用一个 <code>ticking</code> 标志位做节流，保证一帧只算一次。位移很小，成本极低，但滚起来就有纵深了，不至于像张死图。</p>
+<h2>四、元素不可杂乱</h2>
+<p>全站不许有圆角，靠的就是 <code>clip-path</code>。按钮、卡片、代码块都切掉一个对角：</p>
+<pre data-lang="css"><code>.btn {
+  box-shadow: inset 0 0 0 2px var(--paper);
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut),
+    100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
+}
+.btn:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: inset 0 0 0 2px var(--neon), 5px 5px 0 var(--neon);
+  color: var(--neon);
+}</code></pre>
+<p>鼠标一放上去就往左上挪一点，右下角再拍出一块实心的荧光绿影子——这种"错位硬阴影"是海报常用的手法，比柔和的 <code>box-shadow</code> 更配这套锐利的调子。注意这里用的是 <code>inset</code> 描边而不是边框，这样切角处的线才能跟着多边形走，不会在角落漏出个直角。</p>
+<p>区块之间那条斜线接缝，一个容器，背景铺上一块的颜色，里面的伪元素铺满、填下一块的颜色，再给它切个三角。</p>
+<pre data-lang="css"><code>.slant {
+  position: relative;
+  height: clamp(38px, 5vw, 78px);
+  background: var(--a, var(--bg));          /* 上一块的颜色 */
+}
+.slant::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--b, var(--bg-2));        /* 下一块的颜色 */
+  clip-path: polygon(0 100%, 100% 0, 100% 100%);
+}
+
+/* 用修饰类把两端的颜色配好，页面里只写一个类名 */
+.slant--ink-2  { --a: var(--bg);   --b: var(--bg-2); }
+.slant--2-ink  { --a: var(--bg-2); --b: var(--bg);   }</code></pre>
+<p>这样接缝天生严丝合缝，不用算负 margin，也不怕响应式下高度变来变去；再加个 <code>.slant--rev</code> 把三角翻个方向，坡度的朝向就反过来了。</p>
+<h2>五、跑马灯：让页面动起来的那根线</h2>
+<p>每个页面在页头下面都有一条滚动字幕。它更像是一条腰带，修饰你的腰线，与此同时赋予画面动感。它固定是三件套，顺序每个页面都一样：</p>
+<p><strong>① 指示器</strong>：一根竖线 + 一个绿点 + SCROLL 字样，告诉你下面还有东西。 <strong>② 跑马灯</strong>：荧光绿底、黑字的横条，从左往右跑，鼠标一悬停就停。 <strong>③ 装饰条</strong>：跑马灯正下方一条通栏荧光绿，带斜向细纹。</p>
+<pre data-lang="css"><code>.ticker {
+  background: var(--neon);
+  color: var(--ink);
+  overflow: hidden;
+  /* 关键：让文字在「跑马灯 + 下方装饰条」整块绿里上下等距 */
+  padding-top:    calc(0.85rem + var(--strip-h) / 2);
+  padding-bottom: calc(0.85rem - var(--strip-h) / 2);
+}
+.ticker__track {
+  display: flex;
+  width: max-content;
+  animation: ticker-run 40s linear infinite;
+}
+.ticker:hover .ticker__track { animation-play-state: paused; }
+@keyframes ticker-run {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+.neon-bar {
+  height: var(--strip-h);
+  background-color: var(--neon);
+  background-image: repeating-linear-gradient(
+    -45deg, rgba(0, 0, 0, 0.28) 0 3px, transparent 3px 9px
+  );
+}</code></pre>
+<h2>六、故障字和滚动进场</h2>
+<p>大标题上有个小故障闪一下：鼠标移上去，字会红绿错位出重影。做法是只给标题加个 <code>data-glitch</code>，JS 自己往里塞两层副本（<code>--a</code> / <code>--b</code>），再配 CSS 的错位动画。这样 HTML 里不用手写三份字，也不会让读屏软件重复念（副本都带 <code>aria-hidden</code>）。</p>
+<p>内容进场那个"滚动揭示"我用的是 <code>IntersectionObserver</code>，没去监听 <code>scroll</code> 自己算位置——元素进视口才加 <code>is-in</code> 触发淡入，而且触发一次就 <code>unobserve</code>，不会反复算。每个元素还能用 <code>data-delay</code> 错开进场时间，就有那种依次浮现的节奏。</p>
+<h2>七、我出主意，AI 写代码</h2>
+<p>整套代码是 AI 写的，但写什么、按什么规矩写，需要自己定夺。这个分工得说清楚，因为它决定了成品到底像不像"个人名片"。</p>
+<p>我干的活：定三条颜色规矩、定形状只用闪电 / 三角 / 楔形、定绿色占比上限、定"碎片必须铺满全屏还得疏密错落"、定每个页面的 seed 不能重样、定跑马灯三件套的结构。</p>
+<p>丢给 AI 的活：把规矩翻译成几何计算、写出生成器函数、实现 <code>clip-path</code> 的锐角裁切、把响应式断点补齐、把跑马灯的无缝循环调通。</p>
+<h2>八、零依赖、零构建</h2>
+<p>整个站最后就三样东西：一个 CSS 文件、一个 JS 文件、几个 HTML 页面。没有 npm，没有打包器，没有框架，没有构建这一步。</p>
+<p>博客作为一个纯静态的内容站，没状态管理、没路由、没数据请求——引一套前端工具链进来，换来的是每改一篇文章都要等构建，外加一个几百 MB 的 <code>node_modules</code>。就几个页面的站，这账不划算。</p>
+<p>代价是有些 HTML 得手写重复（比如每个页面都得复制一遍导航和页脚）。但就这体量，重复的成本远低于养一套模板引擎或者静态站点生成器。知道什么时候不该上工具，和会用工具一样重要。</p>
+<h2>九、扔到 GitHub Pages 上，让它一直在线</h2>
+<p>站点托管在 <strong>GitHub Pages</strong> 上，仓库名必须是 <code>&lt;用户名&gt;.github.io</code> 这个固定格式，这样网址才干净：<code>https://用户名.github.io</code>，不带任何子路径。</p>
+<p>上线前有两个文件必须准备好：</p>
+<ul><li><code>.nojekyll</code>：一个空文件，告诉 GitHub Pages 别走 Jekyll 处理，直接按静态文件原样发。没它，以下划线开头的文件或目录会被吞掉。</li><li><code>.gitignore</code>：挡掉系统文件和编辑器配置，别把没用的东西提交上去。</li></ul>
+<pre data-lang="bash"><code># 首次发布
+git init -b main
+git add -A
+git commit -m "init: blog"
+git remote add origin https://github.com/&lt;用户名&gt;/&lt;用户名&gt;.github.io.git
+git push -u origin main
+
+# 之后每次更新文章，只要三条命令
+git add -A
+git commit -m "post: 新增文章 xxx"
+git push</code></pre>
+<p>推完 GitHub 会自动构建一次，一两分钟新内容就生效，不用去仓库设置里来回点。Pages 是免费的，也没到期日，只要仓库在，站就一直在线。</p>
+<blockquote>Ps：国内访问 GitHub 不稳，表现就是 TCP 能握手、但 TLS 请求时不时被掐断，push隔三差五失败。这不是配置错，一般重试几次或者用加速器（例如watt toolkit）就过了。不过这种不稳只影响上传；站发布后是 GitHub 的 CDN 对外服务的，访问速度不受影响。</blockquote>
+<h2>结语</h2>
+<p>这项目真正的点在于你的设计思路：用几种颜色、绿色占多少、碎片怎么分布、区块怎么衔接、动线放哪。代码只是这些决定的结果， AI的确能替我把代码写完，然而前端的表现如何还要取决于你自己的想法。</p>
+<p>你要是也想搞类似的视觉，建议从先定约束开始：规定好只能用哪三种颜色、哪些形状禁止出现、什么情况不加元素，剩下的决定会突然简单很多。毕竟，规矩立住了，才不烧心。</p>
+    </div>
+  </div>
+</article>
+
+<section class="article-foot">
+  <div class="wrap article-foot__inner">
+    <a class="btn btn--ghost" href="../archive.html"><span>← 返回文章列表</span></a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__bottom" style="padding-top:0;border:0">
+      <span>© <span data-year>2026</span> QIANMI · ALL RIGHTS RESERVED</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/moss.js"></script>
+</body>
+</html>
